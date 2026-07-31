@@ -21,6 +21,6 @@ class ReservationStatusMail extends Mailable
     public function build()
     {
         return $this->subject('Mise à jour de votre réservation')
-            ->view('emails.reservation-status');
+                    ->view('emails.reservation-status');
     }
 }

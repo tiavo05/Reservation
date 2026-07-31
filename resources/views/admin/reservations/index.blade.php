@@ -1,89 +1,241 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="text-xl font-semibold text-gray-800">
-            Admin - Gestion des Réservations
-        </h2>
-    </x-slot>
 
-    <div class="p-6">
+<div class="min-h-screen bg-gray-100 dark:bg-gray-950 p-6">
 
-        @if(session('success'))
-            <div class="mb-4 p-3 bg-green-100 text-green-700 rounded">
-                {{ session('success') }}
-            </div>
-        @endif
 
-        <div class="overflow-x-auto bg-white shadow-md rounded-lg">
-            <table class="min-w-full text-sm text-left">
+<!-- HEADER -->
 
-                <thead class="bg-gray-100 text-gray-700 uppercase text-xs">
-                    <tr>
-                        <th class="px-4 py-3">Nom</th>
-                        <th class="px-4 py-3">Date</th>
-                        <th class="px-4 py-3">Heure</th>
-                        <th class="px-4 py-3">Statut</th>
-                        <th class="px-4 py-3">Actions</th>
-                    </tr>
-                </thead>
+<div class="flex justify-between items-center mb-8">
 
-                <tbody class="divide-y">
 
-                    @foreach($reservations as $r)
-                        <tr class="hover:bg-gray-50">
+    <div>
 
-                            <td class="px-4 py-3 font-medium text-gray-900">
-                                {{ $r->nom }}
-                            </td>
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-white">
+        Mes réservations
+        </h1>
 
-                            <td class="px-4 py-3">
-                                {{ $r->date_rdv }}
-                            </td>
 
-                            <td class="px-4 py-3">
-                                {{ $r->heure_rdv }}
-                            </td>
+        <p class="text-gray-600 dark:text-gray-400 mt-2">
+        Gérez vos demandes de rendez-vous facilement.
+        </p>
 
-                            <td class="px-4 py-3">
-                                @if($r->statut == 'en_attente')
-                                    <span class="px-2 py-1 text-xs rounded bg-yellow-100 text-yellow-700">
-                                        En attente
-                                    </span>
-                                @elseif($r->statut == 'accepte')
-                                    <span class="px-2 py-1 text-xs rounded bg-green-100 text-green-700">
-                                        Accepté
-                                    </span>
-                                @else
-                                    <span class="px-2 py-1 text-xs rounded bg-red-100 text-red-700">
-                                        Refusé
-                                    </span>
-                                @endif
-                            </td>
 
-                            <td class="px-4 py-3 flex gap-2">
+    </div>
 
-                                <form method="POST" action="{{ route('admin.reservations.accepter', $r) }}">
-                                    @csrf
-                                    <button class="px-3 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-700">
-                                         Accepter
-                                    </button>
-                                </form>
 
-                                <form method="POST" action="{{ route('admin.reservations.refuser', $r) }}">
-                                    @csrf
-                                    <button class="px-3 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-700">
-                                         Refuser
-                                    </button>
-                                </form>
 
-                            </td>
+    <a href="{{ route('reservations.create') }}"
+        class="px-6 py-3 rounded-xl
+        bg-gradient-to-r from-violet-600 to-pink-500
+        text-white font-semibold
+        shadow-lg hover:opacity-90">
+
+         + Nouveau rendez-vous
+
+    </a>
+
+
+    </div>
+
+
+
+
+
+    <!-- CARTE TABLEAU -->
+
+
+    <div class="
+        bg-white/80 dark:bg-white/5
+        backdrop-blur
+        border border-gray-200 dark:border-white/10
+        rounded-2xl
+        shadow-xl
+        p-6
+    ">
+
+
+
+    <div class="flex justify-between mb-6">
+
+
+            <h2 class="text-2xl font-bold dark:text-white">
+
+            Historique
+
+            </h2>
+
+
+
+            <input 
+                type="text"
+                placeholder="Rechercher..."
+                class="
+                px-4 py-2
+                rounded-xl
+                bg-gray-100
+                dark:bg-gray-800
+                border-none
+                "
+            />
+
+
+        </div>
+
+
+
+
+
+        <div class="overflow-x-auto">
+
+
+            <table class="w-full">
+
+
+                    <thead>
+
+                        <tr class="text-left text-gray-500 dark:text-gray-400">
+
+
+                            <th class="p-4">
+                                Date
+                            </th>
+
+
+                            <th class="p-4">
+                                Heure
+                            </th>
+
+
+                            <th class="p-4">
+                                Motif
+                            </th>
+
+
+                            <th class="p-4">
+                                Statut
+                            </th>
+
+
+                            <th class="p-4">
+                                Actions
+                            </th>
 
                         </tr>
-                    @endforeach
+
+
+                    </thead>
+
+                <tbody>
+
+
+                    @forelse($reservations as $reservation)
+
+
+                    <tr class="
+                        border-t
+                        border-gray-200
+                        dark:border-white/10
+                        hover:bg-gray-100
+                        dark:hover:bg-white/5
+                        transition
+                        ">
+
+
+                        <td class="p-4 text-gray-700 dark:text-white">
+
+                            {{ $reservation->date_rdv }}
+
+                        </td>
+
+                        <td class="p-4 text-gray-700 dark:text-white">
+
+                            {{ $reservation->heure_rdv }}
+
+                        </td>
+
+                        <td class="p-4 text-gray-700 dark:text-white">
+
+                            {{ $reservation->motif }}
+
+                        </td>
+
+                        <td class="p-4">
+
+
+                            @if($reservation->statut == 'accepte')
+
+
+                            <span class="
+                                px-4 py-2 rounded-full
+                                bg-green-100 text-green-700
+                                ">
+
+                                ✓ Accepté
+
+                            </span>
+
+                            @elseif($reservation->statut == 'refuse')
+
+
+                            <span class="
+                                px-4 py-2 rounded-full
+                                bg-red-100 text-red-700
+                                ">
+
+                            ✕ Refusé
+
+                            </span>
+                            @else
+
+                            <span class="
+                                px-4 py-2 rounded-full
+                                bg-yellow-100 text-yellow-700
+                                ">
+                                ⌛ En attente
+
+                            </span>
+
+                            @endif
+
+
+                        </td>
+
+                        <td class="p-4">
+
+
+                            <a href="#"
+                                class="
+                                    text-violet-600
+                                    hover:text-pink-500
+                                    font-semibold
+                                ">
+
+                                Voir
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    @empty
+
+                    <tr>
+                        <td colspan="5"
+                            class="p-6 text-center text-gray-500">
+                            Aucune réservation trouvée.
+                        </td>
+                    </tr>
+
+                    @endforelse
 
                 </tbody>
 
             </table>
+
         </div>
 
     </div>
+
+</div>
+
 </x-app-layout>

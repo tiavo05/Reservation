@@ -1,113 +1,290 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="text-2xl font-bold text-gray-800">
-            Tableau de bord
-        </h2>
-    </x-slot>
 
-    <div class="p-6 space-y-6">
+<div class="space-y-8">
 
-        <!-- NOTIFICATIONS -->
-        <div class="bg-white rounded-xl shadow p-6">
-            <h3 class="text-lg font-bold mb-4 text-gray-800">
-                🔔 Notifications récentes
-            </h3>
 
-            <div class="space-y-2">
-                @forelse(auth()->user()->notifications as $notification)
-                    <div class="p-4 rounded-lg border-l-4 border-purple-500 bg-purple-50">
-                        <p class="text-gray-700">
-                            {{ $notification->data['message'] ?? 'Notification' }}
-                        </p>
-                    </div>
-                @empty
-                    <p class="text-gray-500">Aucune notification pour le moment</p>
-                @endforelse
-            </div>
+    <!-- HEADER -->
+    <div class="flex justify-between items-center">
+
+        <div>
+            <h1 class="text-4xl font-bold text-gray-100 dark:text-white">
+                Bonjour {{ Auth::user()->name }} 
+            </h1>
+
+            <p class="text-gray-500 dark:text-gray-400 mt-2">
+                Gérez facilement vos rendez-vous depuis votre espace personnel.
+            </p>
         </div>
 
-        <!-- ADMIN -->
-        @if(auth()->user()->role === 'admin')
 
-            <div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-6 rounded-xl shadow">
-                <h1 class="text-xl font-bold">
-                    🛠 Espace Administrateur
-                </h1>
+        <a href="{{ route('reservations.create') }}"
+           class="px-6 py-3 rounded-xl 
+           bg-gradient-to-r from-violet-600 to-pink-500 
+           text-white font-semibold
+           hover:opacity-90 transition">
 
-                <p class="mt-2 opacity-90">
-                    Gérer les réservations et les utilisateurs en temps réel
-                </p>
+            + Nouveau rendez-vous
 
-                <a href="{{ route('admin.reservations.index') }}"
-                   class="inline-block mt-4 bg-white text-purple-700 px-5 py-2 rounded-lg font-semibold hover:bg-gray-100">
-                    Voir les réservations
-                </a>
-            </div>
-
-        @else
-
-            <!-- ACTIONS -->
-            <div class="grid md:grid-cols-2 gap-6">
-
-                <div class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
-                    <h3 class="font-bold text-lg">📅 Nouvelle réservation</h3>
-                    <p class="text-gray-600 mt-2">
-                        Créez un rendez-vous rapidement
-                    </p>
-
-                    <a href="{{ route('reservations.create') }}"
-                       class="inline-block mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
-                        Réserver
-                    </a>
-                </div>
-
-                <div class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
-                    <h3 class="font-bold text-lg">📋 Mes réservations</h3>
-                    <p class="text-gray-600 mt-2">
-                        Suivi de vos demandes
-                    </p>
-
-                    <a href="{{ route('reservations.index') }}"
-                       class="inline-block mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-                        Consulter
-                    </a>
-                </div>
-
-            </div>
-
-            <!-- STATS -->
-            <div class="bg-white rounded-xl shadow p-6">
-                <h3 class="text-lg font-bold mb-4">
-                    📊 Statistiques
-                </h3>
-
-                <div class="grid grid-cols-3 gap-4">
-
-                    <div class="bg-yellow-50 p-4 rounded-lg text-center">
-                        <p class="text-sm text-gray-600">En attente</p>
-                        <p class="text-2xl font-bold text-yellow-600">
-                            {{ auth()->user()->reservations()->where('statut','en_attente')->count() }}
-                        </p>
-                    </div>
-
-                    <div class="bg-green-50 p-4 rounded-lg text-center">
-                        <p class="text-sm text-gray-600">Acceptées</p>
-                        <p class="text-2xl font-bold text-green-600">
-                            {{ auth()->user()->reservations()->where('statut','accepte')->count() }}
-                        </p>
-                    </div>
-
-                    <div class="bg-red-50 p-4 rounded-lg text-center">
-                        <p class="text-sm text-gray-600">Refusées</p>
-                        <p class="text-2xl font-bold text-red-600">
-                            {{ auth()->user()->reservations()->where('statut','refuse')->count() }}
-                        </p>
-                    </div>
-
-                </div>
-            </div>
-
-        @endif
+        </a>
 
     </div>
+
+
+
+    <!-- STATISTIQUES -->
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+
+        <div class="group p-6 rounded-2xl
+        bg-white/70 dark:bg-white/5
+        backdrop-blur-xl
+        border border-gray-200 dark:border-white/10
+        shadow-lg
+        hover:scale-105
+        transition duration-300">
+
+
+            <p class="text-gray-500 dark:text-gray-400">
+                Total rendez-vous
+            </p>
+
+
+            <h2 class="mt-3 text-4xl font-bold
+            bg-gradient-to-r from-violet-500 to-pink-500
+            bg-clip-text text-transparent">
+
+                {{ $totalReservations }}
+
+            </h2>
+
+
+        </div>
+
+
+
+
+
+        <div class="group p-6 rounded-2xl
+            bg-white/70 dark:bg-white/5
+            backdrop-blur-xl
+            border border-gray-200 dark:border-white/10
+            shadow-lg
+            hover:scale-105
+            transition duration-300">
+
+
+        <p class="text-gray-500 dark:text-gray-400">
+        Acceptés
+        </p>
+
+
+        <h2 class="mt-3 text-4xl font-bold text-green-500">
+
+        {{ $acceptedReservations }}
+
+        </h2>
+
+
+        </div>
+
+
+
+
+
+        <div class="group p-6 rounded-2xl
+        bg-white/70 dark:bg-white/5
+        backdrop-blur-xl
+        border border-gray-200 dark:border-white/10
+        shadow-lg
+        hover:scale-105
+        transition duration-300">
+
+
+        <p class="text-gray-500 dark:text-gray-400">
+        En attente
+        </p>
+
+
+        <h2 class="mt-3 text-4xl font-bold text-orange-500">
+
+        {{ $pendingReservations }}
+
+        </h2>
+
+
+        </div>
+
+
+</div>
+
+
+        <!-- En attente -->
+
+        <div class="p-6 rounded-2xl 
+        bg-white/80 dark:bg-white/5 
+        backdrop-blur
+        border border-gray-200 dark:border-white/10
+        shadow-xl">
+
+
+            <p class="text-gray-500">
+                En attente
+            </p>
+
+
+            <h2 class="text-4xl font-bold mt-3 text-orange-500">
+
+                {{ $pendingReservations }}
+
+            </h2>
+
+
+        </div>
+
+
+
+    </div>
+
+
+
+
+
+    <!-- DERNIERS RENDEZ-VOUS -->
+
+
+    <div class="rounded-2xl 
+    bg-white/80 dark:bg-white/5 
+    backdrop-blur
+    border border-gray-200 dark:border-white/10
+    shadow-xl p-6">
+
+
+        <h2 class="text-2xl font-bold mb-6">
+
+            Mes derniers rendez-vous
+
+        </h2>
+
+
+
+        <div class="overflow-x-auto">
+
+
+            <table class="w-full">
+
+
+                <thead>
+
+                <tr class="border-b dark:border-white/10 text-left">
+
+                    <th class="p-3">
+                        Date
+                    </th>
+
+                    <th class="p-3">
+                        Heure
+                    </th>
+
+                    <th class="p-3">
+                        Motif
+                    </th>
+
+                    <th class="p-3">
+                        Statut
+                    </th>
+
+                </tr>
+
+                </thead>
+
+
+
+                <tbody>
+
+
+                @foreach($reservations as $reservation)
+
+
+                <tr class="border-b dark:border-white/10">
+
+
+                    <td class="p-3">
+                        {{ $reservation->date_rdv }}
+                    </td>
+
+
+                    <td class="p-3">
+                        {{ $reservation->heure_rdv }}
+                    </td>
+
+
+                    <td class="p-3">
+                        {{ $reservation->motif }}
+                    </td>
+
+
+                    <td class="p-3">
+
+
+                        @if($reservation->statut == 'accepte')
+
+                            <span class="px-3 py-1 rounded-full 
+                            bg-green-100 text-green-700">
+
+                                Accepté
+
+                            </span>
+
+
+                        @elseif($reservation->statut == 'refuse')
+
+
+                            <span class="px-3 py-1 rounded-full 
+                            bg-red-100 text-red-700">
+
+                                Refusé
+
+                            </span>
+
+
+                        @else
+
+
+                            <span class="px-3 py-1 rounded-full 
+                            bg-yellow-100 text-yellow-700">
+
+                                En attente
+
+                            </span>
+
+
+                        @endif
+
+
+                    </td>
+
+
+                </tr>
+
+
+                @endforeach
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+    </div>
+
+
+
+</div>
+
+
 </x-app-layout>

@@ -61,10 +61,25 @@
         </p>
 
         <div class="mt-10 flex justify-center gap-4">
-            <a href="/register"
-               class="px-6 py-3 rounded-xl bg-gradient-to-r from-violet-600 to-pink-500 font-semibold text-white">
-                Commencer
-            </a>
+             @if(Auth::check())
+
+                @if(Auth::user()->role === 'admin')
+                    <a href="{{ route('admin.reservations.index') }}">
+                        Accéder au tableau de bord
+                    </a>
+                @else
+                    <a href="{{ route('dashboard') }}">
+                        Accéder au tableau de bord
+                    </a>
+                @endif
+
+                @else
+
+                <a href="{{ route('register') }}" class="px-6 py-3 rounded-xl border border-gray-300 dark:border-white/20 hover:bg-gray-100 dark:hover:bg-white/10">
+                    Commencer
+                </a>
+
+            @endif
 
             <a href="#about"
                class="px-6 py-3 rounded-xl border border-gray-300 dark:border-white/20 hover:bg-gray-100 dark:hover:bg-white/10">

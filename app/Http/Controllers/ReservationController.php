@@ -27,12 +27,43 @@ class ReservationController extends Controller
 
     public function adminIndex()
     {
-        $reservations = Reservation::latest()->get();
-        return view('admin.reservations.index', compact('reservations'));
-    }
+        $search = request('search');
 
-    use App\Mail\ReservationStatusMail;
-    use Illuminate\Support\Facades\Mail;
+
+        $reservations = Reservation::when($search, function ($query) use ($search) {
+
+                $query->where('nom', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+
+            })
+            ->latest()
+            ->get();
+
+
+
+        $totalReservations = Reservation::count();
+
+
+        $accepte = Reservation::where('statut', 'accepte')
+                        ->count();
+
+
+        $attente = Reservation::where('statut', 'en_attente')
+                        ->count();
+
+
+        $users = \App\Models\User::count();
+
+
+
+        return view('admin.reservations.index', compact(
+            'reservations',
+            'totalReservations',
+            'accepte',
+            'attente',
+            'users'
+        ));
+    }
     
     public function accepter(Reservation $reservation)
     {
@@ -69,6 +100,18 @@ class ReservationController extends Controller
             'motif' => 'required|string',
         ]);
 
+            $exists = Reservation::where('date_rdv', $request->date_rdv)
+            ->where('heure_rdv', $request->heure_rdv)
+            ->where('statut', '!=', 'refuse')
+            ->exists();
+        
+        if ($exists) {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'heure_rdv' => 'Ce créneau est déjà réservé.'
+                ]);
+        }
         Reservation::create([
             'user_id' => Auth::id(),
             'nom' => $request->nom,

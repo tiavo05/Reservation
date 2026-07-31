@@ -1,12 +1,26 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Nouvelle réservation
-        </h2>
+    <div class="text-center mb-10">
+
+        <h1 class="text-4xl font-bold 
+            bg-gradient-to-r from-violet-500 to-pink-500 
+            bg-clip-text text-transparent">
+            Réserver un rendez-vous
+        </h1>
+
+        <p class="mt-3 text-gray-600 dark:text-gray-400">
+
+            Remplissez le formulaire pour envoyer votre demande.
+
+        </p>
+    </div>
     </x-slot>
 
     <div class="py-8">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+    <div class="bg-white/80 dark:bg-white/5 
+        backdrop-blur-xl 
+        border border-gray-200 dark:border-white/10
+        rounded-3xl shadow-xl p-8">
 
             <div class="bg-white p-6 rounded-lg shadow">
 
@@ -14,11 +28,16 @@
                     @csrf
 
                     <div class="mb-4">
-                        <label class="block font-medium mb-2">Nom</label>
-                        <input type="text"
-                               name="nom"
-                               class="w-full border rounded-lg p-3"
-                               required>
+                        <label class="block font-medium mb-2 ">Nom</label>
+                        <input 
+                            type="text"
+                            name="nom"
+                            value="{{ old('nom') }}"
+                            placeholder="Votre nom"
+                            class="w-full rounded-xl 
+                                bg-gray-100 dark:bg-gray-900
+                                border-gray-300 dark:border-gray-700
+                                focus:ring-violet-500">
                     </div>
 
                     <div class="mb-4">
@@ -56,6 +75,11 @@
                                class="w-full border rounded-lg p-3"
                                required>
                     </div>
+                    @error('heure_rdv')
+                        <p class="text-red-500 text-sm mt-1">
+                            {{ $message }}
+                        </p>
+                    @enderror
 
                     <div class="mb-4">
                         <label class="block font-medium mb-2">

@@ -15,10 +15,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Tableau de bord
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+    Route::get('/redirect', function () {
+
+        if (auth()->user()->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+
+        return redirect()->route('dashboard');
+
+    })->middleware('auth')->name('redirect');
 
 // Routes protégées par authentification
 Route::middleware('auth')->group(function () {
@@ -50,4 +55,60 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 });
 // Routes Breeze (login, register, reset password...)
+use App\Models\Reservation;
+
+
+    Route::middleware('auth')->group(function () {
+
+        Route::get('/dashboard', function () {
+
+
+            $user = auth()->user();
+
+
+            $reservations = Reservation::where('user_id', $user->id)
+                ->latest()
+                ->take(5)
+                ->get();
+
+
+
+            $totalReservations = Reservation::where('user_id', $user->id)
+                ->count();
+
+
+
+            $acceptedReservations = Reservation::where('user_id', $user->id)
+                ->where('statut', 'accepte')
+                ->count();
+
+
+
+            $pendingReservations = Reservation::where('user_id', $user->id)
+                ->where('statut', 'en_attente')
+                ->count();
+
+
+
+            return view('dashboard', compact(
+                'reservations',
+                'totalReservations',
+                'acceptedReservations',
+                'pendingReservations'
+            ));
+
+
+        })->name('dashboard');
+
+
+    });
+
+    Route::middleware(['auth', 'admin'])->group(function () {
+
+        Route::get('/admin/dashboard', function () {
+            return view('admin.dashboard');
+        })->name('admin.dashboard');
+    
+    });
+
 require __DIR__.'/auth.php';
