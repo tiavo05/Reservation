@@ -8,19 +8,17 @@ class AdminDashboardController extends Controller
 {
     public function index()
     {
-
-        return view('admin.dashboard', [
-
-            'totalReservations' => Reservation::count(),
-
-            'acceptedReservations' =>
-                Reservation::where('statut','accepte')->count(),
-
-            'pendingReservations' =>
-                Reservation::where('statut','en_attente')->count(),
-
-        ]);
-
+        $totalReservations = Reservation::count();
+    
+        $pendingReservations = Reservation::where('statut', 'En attente')->count();
+    
+        $confirmedReservations = Reservation::where('statut', 'Confirmé')->count();
+    
+        return view('admin.dashboard', compact(
+            'totalReservations',
+            'pendingReservations',
+            'confirmedReservations'
+        ));
     }
 
 }
