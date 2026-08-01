@@ -35,6 +35,7 @@
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
+        <!-- TOTAL -->
 
         <div class="group p-6 rounded-2xl
         bg-white/70 dark:bg-white/5
@@ -58,39 +59,9 @@
 
             </h2>
 
-
         </div>
 
-
-
-
-
-        <div class="group p-6 rounded-2xl
-            bg-white/70 dark:bg-white/5
-            backdrop-blur-xl
-            border border-gray-200 dark:border-white/10
-            shadow-lg
-            hover:scale-105
-            transition duration-300">
-
-
-        <p class="text-gray-500 dark:text-gray-400">
-        Acceptés
-        </p>
-
-
-        <h2 class="mt-3 text-4xl font-bold text-green-500">
-
-        {{ $acceptedReservations }}
-
-        </h2>
-
-
-        </div>
-
-
-
-
+        <!-- ACCEPTES -->
 
         <div class="group p-6 rounded-2xl
         bg-white/70 dark:bg-white/5
@@ -101,39 +72,36 @@
         transition duration-300">
 
 
-        <p class="text-gray-500 dark:text-gray-400">
-        En attente
-        </p>
+            <p class="text-gray-500 dark:text-gray-400">
+                Acceptés
+            </p>
 
 
-        <h2 class="mt-3 text-4xl font-bold text-orange-500">
+            <h2 class="mt-3 text-4xl font-bold text-green-500">
 
-        {{ $pendingReservations }}
+                {{ $acceptedReservations }}
 
-        </h2>
-
+            </h2>
 
         </div>
 
+        <!-- EN ATTENTE -->
 
-</div>
-
-
-        <!-- En attente -->
-
-        <div class="p-6 rounded-2xl 
-        bg-white/80 dark:bg-white/5 
-        backdrop-blur
+        <div class="group p-6 rounded-2xl
+        bg-white/70 dark:bg-white/5
+        backdrop-blur-xl
         border border-gray-200 dark:border-white/10
-        shadow-xl">
+        shadow-lg
+        hover:scale-105
+        transition duration-300">
 
 
-            <p class="text-gray-500">
+            <p class="text-gray-500 dark:text-gray-400">
                 En attente
             </p>
 
 
-            <h2 class="text-4xl font-bold mt-3 text-orange-500">
+            <h2 class="mt-3 text-4xl font-bold text-orange-500">
 
                 {{ $pendingReservations }}
 
@@ -143,15 +111,9 @@
         </div>
 
 
-
-    </div>
-
-
-
-
+</div>
 
     <!-- DERNIERS RENDEZ-VOUS -->
-
 
     <div class="rounded-2xl 
     bg-white/80 dark:bg-white/5 
@@ -197,7 +159,6 @@
                 </tr>
 
                 </thead>
-
 
 
                 <tbody>
@@ -279,12 +240,7 @@
 
         </div>
 
-
     </div>
 
-
-
 </div>
-
-
 </x-app-layout>
