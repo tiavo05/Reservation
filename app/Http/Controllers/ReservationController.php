@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Notifications\ReservationStatusNotification;
 use App\Mail\ReservationStatusMail;
 use Illuminate\Support\Facades\Mail;
+use App\Models\Disponibilite;
 
 class ReservationController extends Controller
 {
@@ -22,7 +23,11 @@ class ReservationController extends Controller
 
     public function create()
     {
-        return view('reservations.create');
+        $disponibilites = Disponibilite::where('disponible', true)
+            ->orderBy('heure')
+            ->get();
+    
+        return view('reservations.create', compact('disponibilites'));
     }
 
     public function adminIndex()
