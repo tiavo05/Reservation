@@ -50,7 +50,9 @@
                    class="w-full mt-1 p-3 rounded-lg bg-black/30 border border-white/10 focus:ring-2 focus:ring-violet-500">
         </div>
 
-        <button class="w-full py-3 rounded-lg bg-gradient-to-r from-violet-600 to-pink-500 font-semibold hover:opacity-90">
+        <button 
+            type="submit"
+            class="w-full py-3 rounded-lg bg-gradient-to-r from-violet-600 to-pink-500 font-semibold hover:opacity-90">
             Créer un compte
         </button>
     </form>
