@@ -11,16 +11,15 @@ return new class extends Migration
         Schema::create('disponibilites', function (Blueprint $table) {
 
             $table->id();
-
+        
             $table->date('date');
-
+        
             $table->time('heure');
-
-            $table->boolean('disponible')
-                ->default(true);
-
+        
+            $table->boolean('disponible')->default(true);
+        
             $table->timestamps();
-
+        
         });
     }
 

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reservation extends Model
 {
+
     protected $fillable = [
         'user_id',
         'nom',
@@ -14,6 +15,14 @@ class Reservation extends Model
         'date_rdv',
         'heure_rdv',
         'motif',
-        'statut'
+        'statut',
+        'disponibilite_id'
     ];
+
+
+    public function disponibilite()
+    {
+        return $this->belongsTo(Disponibilite::class);
+    }
+
 }

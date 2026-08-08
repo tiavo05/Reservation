@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\DisponibiliteController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -110,5 +111,16 @@ use App\Models\Reservation;
         })->name('admin.dashboard');
     
     });
+    
+    
+    // Route pour récupérer les créneaux disponibles
+    
+    Route::get('/disponibilites/{date}', 
+        [DisponibiliteController::class, 'getDisponibilites']
+    )
+    ->middleware('auth')
+    ->name('disponibilites.get');
+    
+
 
 require __DIR__.'/auth.php';

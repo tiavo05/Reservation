@@ -10,6 +10,7 @@ use App\Mail\ReservationStatusMail;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Disponibilite;
 
+
 class ReservationController extends Controller
 {
     public function index()
@@ -117,7 +118,7 @@ class ReservationController extends Controller
                     'heure_rdv' => 'Ce créneau est déjà réservé.'
                 ]);
         }
-        Reservation::create([
+        $reservation = Reservation::create([
             'user_id' => Auth::id(),
             'nom' => $request->nom,
             'email' => $request->email,
@@ -127,9 +128,15 @@ class ReservationController extends Controller
             'motif' => $request->motif,
             'statut' => 'en_attente',
         ]);
-
+        
+        
+        $disponibilites = Disponibilite::where('disponible', true)
+            ->orderBy('heure')
+            ->get();
+        
         return redirect()
             ->route('reservations.index')
             ->with('success', 'Réservation enregistrée avec succès.');
-    }
-}
+            
+        }
+ }

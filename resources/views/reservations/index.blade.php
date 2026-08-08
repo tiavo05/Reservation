@@ -1,63 +1,335 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl">
-            Mes réservations
-        </h2>
-    </x-slot>
 
-    <div class="py-8">
-        <div class="max-w-6xl mx-auto">
 
-            @if(session('success'))
-                <div class="bg-green-100 text-green-700 p-4 rounded mb-4">
-                    {{ session('success') }}
-                </div>
-            @endif
+<div class="min-h-screen bg-gray-100 dark:bg-gray-950 p-6">
 
-            <a href="{{ route('reservations.create') }}"
-               class="bg-blue-600 text-white px-4 py-2 rounded">
-                Nouvelle réservation
-            </a>
 
-            <table class="w-full mt-6 border">
-                <thead>
-                    <tr class="bg-gray-100">
-                        <th class="p-3">Date</th>
-                        <th class="p-3">Heure</th>
-                        <th class="p-3">Motif</th>
-                        <th class="p-3">Statut</th>
-                    </tr>
-                </thead>
 
-                <tbody>
-                    @forelse($reservations as $reservation)
-                        <tr class="border-t">
-                            <td class="p-3">
-                                {{ $reservation->date_rdv }}
-                            </td>
+    <!-- HEADER -->
 
-                            <td class="p-3">
-                                {{ $reservation->heure_rdv }}
-                            </td>
+    <div class="flex justify-between items-center mb-8">
 
-                            <td class="p-3">
-                                {{ $reservation->motif }}
-                            </td>
 
-                            <td class="p-3">
-                                {{ $reservation->statut }}
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="4" class="text-center p-4">
-                                Aucune réservation trouvée.
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+        <div>
+
+            <h1 class="
+            text-4xl 
+            font-bold
+            text-gray-900
+            dark:text-white">
+
+                Mes réservations
+
+            </h1>
+
+
+            <p class="
+            mt-2
+            text-gray-600
+            dark:text-gray-400">
+
+                Consultez l'historique de vos demandes de rendez-vous.
+
+            </p>
+
 
         </div>
+
+
+
+
+
+        <a href="{{ route('reservations.create') }}"
+
+        class="
+        px-6 py-3
+        rounded-xl
+        bg-gradient-to-r from-violet-600 to-pink-500
+        text-white
+        font-semibold
+        shadow-lg
+        hover:opacity-90
+        transition">
+
+            + Nouveau rendez-vous
+
+        </a>
+
+
+
     </div>
+
+
+
+
+
+    @if(session('success'))
+
+        <div class="
+        mb-6
+        p-4
+        rounded-xl
+        bg-green-100
+        text-green-700">
+
+            {{ session('success') }}
+
+        </div>
+
+    @endif
+
+
+
+
+
+
+    <!-- TABLE CARD -->
+
+
+    <div class="
+    bg-white/80
+    dark:bg-white/5
+    backdrop-blur
+    border border-gray-200
+    dark:border-white/10
+    rounded-2xl
+    shadow-xl
+    p-6">
+
+
+        <div class="flex justify-between mb-6">
+
+
+            <h2 class="
+            text-2xl
+            font-bold
+            text-gray-900
+            dark:text-white">
+
+                Historique des rendez-vous
+
+            </h2>
+
+
+
+            <input
+            type="text"
+            placeholder="Rechercher..."
+            class="
+            px-4 py-2
+            rounded-xl
+            bg-gray-100
+            dark:bg-gray-800
+            border-none
+            ">
+
+
+        </div>
+
+
+
+
+
+
+        <div class="overflow-x-auto">
+
+
+            <table class="w-full">
+
+
+                <thead>
+
+
+                    <tr class="
+                    text-left
+                    text-gray-500
+                    dark:text-gray-400
+                    border-b
+                    dark:border-white/10">
+
+
+                        <th class="p-4">
+                            Date
+                        </th>
+
+
+                        <th class="p-4">
+                            Heure
+                        </th>
+
+
+                        <th class="p-4">
+                            Motif
+                        </th>
+
+
+                        <th class="p-4">
+                            Statut
+                        </th>
+
+
+                    </tr>
+
+
+                </thead>
+
+
+
+
+
+                <tbody>
+
+
+                @forelse($reservations as $reservation)
+
+
+
+                    <tr class="
+                    border-b
+                    dark:border-white/10
+                    hover:bg-gray-100
+                    dark:hover:bg-white/5
+                    transition">
+
+
+                        <td class="
+                        p-4
+                        dark:text-white">
+
+                            {{ $reservation->date_rdv }}
+
+                        </td>
+
+
+
+
+                        <td class="
+                        p-4
+                        dark:text-white">
+
+                            {{ $reservation->heure_rdv }}
+
+                        </td>
+
+
+
+
+                        <td class="
+                        p-4
+                        dark:text-white">
+
+                            {{ $reservation->motif }}
+
+                        </td>
+
+
+
+
+
+                        <td class="p-4">
+
+
+                            @if($reservation->statut == 'accepte')
+
+
+                                <span class="
+                                px-3 py-1
+                                rounded-full
+                                bg-green-100
+                                text-green-700">
+
+                                    ✓ Accepté
+
+                                </span>
+
+
+
+                            @elseif($reservation->statut == 'refuse')
+
+
+                                <span class="
+                                px-3 py-1
+                                rounded-full
+                                bg-red-100
+                                text-red-700">
+
+                                    ✕ Refusé
+
+                                </span>
+
+
+
+
+                            @else
+
+
+                                <span class="
+                                px-3 py-1
+                                rounded-full
+                                bg-orange-100
+                                text-orange-700">
+
+                                    ⌛ En attente
+
+                                </span>
+
+
+
+                            @endif
+
+
+                        </td>
+
+
+                    </tr>
+
+
+
+
+                @empty
+
+
+
+                    <tr>
+
+                        <td colspan="5"
+                        class="
+                        p-6
+                        text-center
+                        text-gray-500">
+
+                            Aucune réservation trouvée.
+
+                        </td>
+
+
+                    </tr>
+
+
+
+
+                @endforelse
+
+
+
+                </tbody>
+
+
+
+            </table>
+
+
+
+        </div>
+
+
+
+    </div>
+
+
+
+</div>
+
+
+
 </x-app-layout>
